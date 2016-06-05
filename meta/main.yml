@@ -1,0 +1,30 @@
+---
+
+dependencies: []
+
+galaxy_info:
+
+  author: 'Robin Schneider'
+  description: 'Manage Opsi using Ansible :)'
+  license: 'AGPL-3.0'
+  min_ansible_version: '2.1.0'
+
+  status:
+    name: 'beta'
+
+  platforms:
+
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty
+
+    - name: Univention
+      versions:
+        - Borgfeld
+
+  galaxy_tags:
+    - opsi
+    - products
+    - lmz
+    - school

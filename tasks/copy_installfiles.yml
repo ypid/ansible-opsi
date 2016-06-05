@@ -1,0 +1,122 @@
+---
+# .. vim: foldmarker=[[[,]]]:foldmethod=marker
+
+- name: Set variables
+  set_fact:
+    opsi__depoy_installfiles_dir_path: '{{ [ opsi__depoy_base_path, opsi__installfiles_item.key, opsi__depoy_installfiles_dir_name ] | join("/") | quote }}'
+    opsi__target_archive_file_path: '{{ [
+        opsi__installfiles_archive_dir_path,
+        (opsi__installfiles_item.value.controller_archive_file_path | basename)
+      ] | join("/") | quote }}'
+
+# Error checking [[[
+
+- name: Get files in installation files directory
+  command: ls -1 {{ opsi__depoy_installfiles_dir_path }}
+  register: opsi__register_installfiles_ls
+  always_run: True
+  changed_when: False
+
+- name: Check if the installation files directory is empty
+  fail:
+    msg: 'The directory {{ opsi__depoy_installfiles_dir_path }} was expected to be empty but it contains the following files: {{ opsi__register_installfiles_ls.stdout_lines | join(", ") }}'
+  when: (opsi__register_installfiles_ls.stdout_lines|length > 0)
+
+# .. ]]]
+
+# Copy archive file from controller to the Opsi Server [[[
+
+# TODO: In case the `copy` modules gets support for custom hashing algos:
+# (opsi__installfiles_achrive_hash_algo_preference
+#       | intersect(opsi__installfiles_item.value.archive_checksum.keys()) | first)
+- name: Copy archive file from controller to the Opsi Server
+  copy:
+    src: '{{ opsi__installfiles_item.value.controller_archive_file_path }}'
+    dest: '{{ opsi__target_archive_file_path }}'
+    owner: 'root'
+    group: 'root'
+    mode: '0640'
+  register: opsi__register_installfiles_copy
+
+- name: Check if expected archive file checksum matches
+  fail:
+    msg: |
+      Checksum mismatch for archive file: "{{ opsi__installfiles_item.value.controller_archive_file_path }}".
+      Expected: {{ opsi__installfiles_item.value.archive_checksum_value }}
+      Calculated: {{ opsi__register_installfiles_copy.checksum }}
+      Checksum algorithm: {{ opsi__installfiles_item.value.archive_checksum_algo }}
+  when: (opsi__register_installfiles_copy is defined and
+         "archive_checksum_algo" in opsi__installfiles_item.value and
+         "archive_checksum_value" in opsi__installfiles_item.value and
+         opsi__installfiles_item.value.archive_checksum_algo == "sha1" and
+         opsi__installfiles_item.value.archive_checksum_value != opsi__register_installfiles_copy.checksum)
+
+## This was slower in my testing in case the file is already present. 2.50s compared to 8.97s.
+# - name: Copy archive files from controller to the Opsi Server
+#   synchronize:
+#     src: '{{ opsi__installfiles_item.value.controller_archive_file_path }}'
+#     dest: '{{ opsi__installfiles_archive_dir_path + "/" + (opsi__installfiles_item.value.controller_archive_file_path | basename) }}'
+#     archive: False
+#     verify_host: True
+#   tags: [ 'role::opsi:installfiles' ]
+
+# .. ]]]
+
+# Extract archive file [[[
+
+# Rewrite using p7zip-full
+- name: Extract ISO file
+  command: 7z x '{{ opsi__target_archive_file_path }}'
+  args:
+      chdir: '{{ opsi__depoy_installfiles_dir_path }}'
+
+# - name: Mount archive file
+#   mount:
+#     name: '{{ opsi__installfiles_archive_tmp_mount_dir_path }}'
+#     src: '{{ opsi__installfiles_archive_dir_path + "/" + (opsi__installfiles_item.value.controller_archive_file_path | basename) }}'
+#     state: 'mounted'
+#     fstype: 'archive9660'
+#     opts: 'ro,loop'
+#     fstab: '{{ opsi__installfiles_archive_dir_path + "/ansible_fake_fstab" }}'
+
+# Using mount, copy and umounted to extract the image, superseded [[[
+
+## ISO files are not yet supported as of Ansible 2.1.
+# - name: Extract ISO file
+#   unarchive:
+#     dest: '{{ opsi__depoy_installfiles_dir_path }}'
+#     src: '{{ opsi__installfiles_archive_dir_path + "/" + (opsi__installfiles_item.value.controller_archive_file_path | basename) }}'
+#     copy: False
+
+# - name: Ensure archive file is unmounted
+#   mount:
+#     name: '{{ opsi__installfiles_archive_tmp_mount_dir_path }}'
+#     src: '{{ opsi__installfiles_archive_dir_path + "/" + (opsi__installfiles_item.value.controller_archive_file_path | basename) }}'
+#     state: 'absent'
+#     fstype: 'archive9660'
+#     fstab: '{{ opsi__installfiles_archive_dir_path + "/ansible_fake_fstab" }}'
+
+# .. ]]]
+
+- name: Set Opsi permissions on the install files
+  command: opsi-set-rights {{ opsi__depoy_installfiles_dir_path | quote }}
+  when: (opsi__register_opsi_installed.rc == 0)
+
+# .. ]]]
+
+# Save state using Ansible facts for each opsi__installfiles_item in case the run gets interrupted [[[
+
+- name: Re-read local facts
+  action: setup
+
+## Including `ypid` in the facts name to allow use a different role to setup
+## the Opsi server.
+- name: Save local Ansible facts
+  template:
+    src: 'etc/ansible/facts.d/opsi_ypid.fact.j2'
+    dest: '/etc/ansible/facts.d/opsi_ypid.fact'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+
+# .. ]]]

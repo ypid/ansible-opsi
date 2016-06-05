@@ -1,0 +1,224 @@
+---
+# .. vim: foldmarker=[[[,]]]:foldmethod=marker
+
+# Default variables
+# =================
+#
+# .. contents:: Sections
+#    :local:
+#
+# .. include:: includes/all.rst
+
+# Packages and installation [[[
+# -------------------------
+
+# .. envvar:: opsi__base_packages
+#
+# List of base packages to install.
+opsi__base_packages:
+  - 'p7zip-full'
+
+
+# .. envvar:: opsi__deploy_state
+#
+# What is the desired state which this role should achieve? Possible options:
+#
+# ``present``
+#   Default. Ensure that Opsi is installed and configured as requested.
+#
+# ``absent``
+#   Ensure that Opsi is uninstalled and it's configuration is removed.
+#
+#
+# .. warning:: Currently, only ``present`` is fully supported!
+#
+opsi__deploy_state: 'present'
+
+# .. ]]]
+
+# Opsi product updates [[[
+# --------------------
+#
+# Opsi products are usually installed/updated thought a central repository.
+# This repository can hold a variety of Opsi products which can be updated (and
+# installed if not already present) using the :program:`opsi-product-updater`.
+
+# .. envvar:: opsi__product_updater_run
+#
+# Whether or not to run the :program:`opsi-product-updater` during role execution.
+#
+# .. note:: This might take a long time, especially on the first run.
+#
+opsi__product_updater_run: True
+
+
+# .. envvar:: opsi__product_updater_options
+#
+# Additional command line options for :program:`opsi-product-updater`.
+#
+# Refer to the :ref:`paedML Linux 6.0 <opsi__ref_product_updater_paedml_linux>`
+# section for details on the specific flags set as default here.
+opsi__product_updater_options:
+  - '-i'
+  - '-v'
+  - '-v'
+
+# .. ]]]
+
+# .. Install and remove Opsi products [[[
+#
+# .. _opsi__section_products:
+#
+# Install and remove Opsi products
+# --------------------------------
+#
+# This section allows you to manually install provided Opsi products on the
+# server.
+#
+# Refer to the :ref:`documentation of all options <opsi__ref_products>` for
+# more details.
+
+# .. envvar:: opsi__products
+#
+# See `opsi__section_products`_.
+# This variable is intended to be used in Ansible’s global inventory.
+# More specific variables can overrule less specific variables.
+opsi__products: {}
+
+
+# .. envvar:: opsi__products_host_group
+#
+# See `opsi__section_products`_.
+# This variable is intended to be used in a host inventory group of Ansible
+# (only one host group is supported).
+opsi__products_host_group: {}
+
+
+# .. envvar:: opsi__products_host
+#
+# See `opsi__section_products`_.
+# This variable is intended to be used in the inventory of the host.
+opsi__products_host: {}
+
+# .. ]]]
+
+# Opsi product installation files [[[
+#
+# .. _opsi__section_installfiles:
+#
+# Opsi product installation files
+# -------------------------------
+#
+# Some Opsi products are not usable out of the box.
+# This section describes how to make those Opsi products usable by providing
+# missing installation files.
+# The reason why they are not usable is because of the restrictive nature of
+# proprietary software (e. g. Microsoft).
+#
+# Refer to the :ref:`documentation of all options <opsi__ref_installfiles>` for
+# more details.
+
+# .. envvar:: opsi__installfiles
+#
+# See `opsi__section_installfiles`_.
+# This variable is intended to be used in Ansible’s global inventory.
+# More specific variables can overrule less specific variables.
+opsi__installfiles: {}
+
+
+# .. envvar:: opsi__installfiles_host_group
+#
+# See `opsi__section_installfiles`_.
+# This variable is intended to be used in a host inventory group of Ansible
+# (only one host group is supported).
+opsi__installfiles_host_group: {}
+
+
+# .. envvar:: opsi__installfiles_host
+#
+# See `opsi__section_installfiles`_.
+# This variable is intended to be used in the inventory of the host.
+opsi__installfiles_host: {}
+
+
+# .. envvar:: opsi__installfiles_achrive_hash_algo_preference
+#
+# List of hash algorithms, in order of preference starting with the
+# preferred one.
+# The first hash algorithm will be used when it was specified using
+# :any:`archive_checksum <opsi__ref_archive_checksum>`.
+#
+# Currently, only ``sha1`` is supported but the role default
+# will use the strongest hash function available in the Ansible ``copy``
+# module. The ``stat`` module could be used to use stronger hash function right
+# now (as of Ansible 2.0) but the ``copy`` module calculates a checksum anyway
+# so it was decided to wait for proper support in the ``copy`` module.
+# Checksum calculation and compararchiven should be backwards compatible.
+opsi__installfiles_achrive_hash_algo_preference: [ 'sha1' ]
+
+# .. ]]]
+
+# Internals [[[
+# ---------
+
+# .. envvar:: opsi__depoy_base_path
+#
+# Base directory path on the Opsi server where the Opsi products are installed.
+opsi__depoy_base_path: '/var/lib/opsi/depot'
+
+
+# .. envvar:: opsi__depoy_installfiles_dir_name
+#
+# Name of the directory where the install files should be placed.
+opsi__depoy_installfiles_dir_name: 'installfiles'
+
+
+# .. envvar:: opsi__products_files_dir_path
+#
+# Base directory path on the Opsi server where the Opsi products defined in the
+# `opsi__section_products`_ section will be copied to.
+opsi__products_files_dir_path: '/home/fixme/ansible_managed'
+
+
+# .. envvar:: opsi__products_files_owner
+#
+# System user who owns the :any:`opsi__products_files_dir_path` and all files
+# and directories below it.
+opsi__products_files_owner: 'root'
+
+
+# .. envvar:: opsi__products_files_group
+#
+# System group of the :any:`opsi__products_files_dir_path` and all files
+# and directories below it.
+opsi__products_files_group: 'root'
+
+
+# .. envvar:: opsi__products_files_permissions
+#
+# Unix permissions of the :any:`opsi__products_files_dir_path` and all files
+# and directories below it. Refer to :manpage:`chmod(1)` for details.
+opsi__products_files_permissions: 'u=rwX,g=rwX,o=rX'
+
+
+# .. envvar:: opsi__installfiles_archive_dir_path
+#
+# Base directory path on the Opsi server where the Opsi products are installed.
+opsi__installfiles_archive_dir_path: '/var/local/archives'
+
+
+# .. envvar:: opsi__installfiles_archive_tmp_mount_dir_path
+#
+# Base directory path on the Opsi server where the archive files will be mounted in
+# order to get to the files contained in the archive.
+opsi__installfiles_archive_tmp_mount_dir_path: '/media/archive'
+
+
+# .. envvar:: opsi__testing_mode
+#
+# If set to ``True``, don’t run Opsi specific commands in case they are not
+# installed. This allows for role development against a system which does not
+# have Opsi installed.
+opsi__testing_mode: False
+
+# .. ]]]

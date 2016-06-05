@@ -1,0 +1,41 @@
+{% set opsi__tpl_installfiles =
+    (ansible_local.opsi_ypid.installfiles)
+    if (ansible_local|d() and
+        ansible_local.opsi_ypid|d() and ansible_local.opsi_ypid.installfiles|d())
+    else {}
+%}
+{% set opsi__tpl_opsi__installfiles_copy_item =
+    opsi__register_installfiles_copy
+    if (opsi__register_installfiles_copy|d())
+    else {}
+%}
+{% set opsi__tpl_installfiles_item_dict = {
+        "setup_complete": true,
+    }
+%}
+{% set _ = (opsi__tpl_installfiles_item_dict.update(
+    {
+        "archive_local_file_path": opsi__tpl_opsi__installfiles_copy_item.dest,
+    }))
+    if ('dest' in opsi__tpl_opsi__installfiles_copy_item)
+    else None
+%}
+{% set _ = (opsi__tpl_installfiles_item_dict.update(
+    {
+        "archive_checksum": {
+            "sha1": opsi__tpl_opsi__installfiles_copy_item.checksum,
+        },
+    }))
+    if ('checksum' in opsi__tpl_opsi__installfiles_copy_item)
+    else None
+%}
+{% set opsi__tpl_installfiles_item = ({
+        opsi__installfiles_item.key: opsi__tpl_installfiles_item_dict,
+    })
+    if (opsi__installfiles_item|d() and opsi__installfiles_item.key|d())
+    else {}
+%}
+{{ ({
+    "configured": True,
+    "installfiles": opsi__tpl_installfiles | combine(opsi__tpl_installfiles_item, recursive=True),
+}) | to_nice_json }}

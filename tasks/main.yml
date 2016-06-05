@@ -1,0 +1,156 @@
+---
+# .. vim: foldmarker=[[[,]]]:foldmethod=marker
+
+- name: Combine variables
+  set_fact:
+    opsi__products_combined: '{{
+      opsi__products
+      | combine(opsi__products_host_group)
+      | combine(opsi__products_host) }}'
+    opsi__installfiles_combined: '{{
+      opsi__installfiles
+      | combine(opsi__installfiles_host_group)
+      | combine(opsi__installfiles_host) }}'
+  tags:
+    - 'role::opsi:products'
+    - 'role::opsi:installfiles'
+
+- name: Ensure specified packages are in there desired state
+  apt:
+    name: '{{ item }}'
+    state: '{{ "latest" if (opsi__deploy_state == "present") else "absent" }}'
+    install_recommends: False
+    purge: True
+  with_flattened: '{{ opsi__base_packages }}'
+  tags: [ 'role::opsi:pkg_install' ]
+
+- name: Check if Opsi is installed on the system
+  command: which opsi-product-updater
+  register: opsi__register_opsi_installed
+  failed_when: '{{ not opsi__testing_mode|bool }}'
+  changed_when: False
+  always_run: True
+
+- name: Ensure that local fact directory exists
+  file:
+    dest: '/etc/ansible/facts.d'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  tags:
+    - 'role::opsi:products'
+    - 'role::opsi:installfiles'
+
+- name: Ensure that given options are valid
+  assert:
+    that:
+      - (("archive_checksum" in item.value and "sha1" in item.value.archive_checksum) or "archive_checksum" not in item.value)
+      - ("controller_archive_file_path" in item.value)
+  with_dict: '{{ opsi__installfiles_combined }}'
+  tags: [ 'role::opsi:installfiles' ]
+
+# OPSI product update [[[
+
+- name: Update opsi products | documentation 5.3.2
+  command: opsi-product-updater {{ opsi__product_updater_options | map("quote") | join(" ") }}
+  when: (opsi__product_updater_run | bool and opsi__register_opsi_installed.rc == 0)
+  tags: [ 'role::opsi:prod_update' ]
+
+# .. ]]]
+
+# Install and remove Opsi products [[[
+
+- name: Create directory where the archive files should be stored
+  file:
+    path: '{{ opsi__products_files_dir_path }}'
+    state: 'directory'
+    owner: '{{ opsi__products_files_owner }}'
+    group: '{{ opsi__products_files_group }}'
+    mode: '{{ opsi__products_files_permissions }}'
+  tags: [ 'role::opsi:products' ]
+
+- name: Copy Opsi product files to the Opsi Server
+  copy:
+    src: '{{ item.value.src_opsi_file }}'
+    dest: '{{ opsi__products_files_dir_path }}'
+    owner: '{{ opsi__products_files_owner }}'
+    group: '{{ opsi__products_files_group }}'
+    mode: '{{ opsi__products_files_permissions }}'
+  register: opsi__register_products_copy
+  when: (item.value.src_opsi_file is string and item.value.state|d("present") in [ "present", "copied" ])
+  with_dict: '{{ opsi__products_combined }}'
+  tags: [ 'role::opsi:products' ]
+
+- name: Install Opsi products
+  command: opsi-package-manager --install {{ item.dest | quote }}
+  when: (item|changed and item.value.state|d("present") in [ "present" ])
+  with_items: '{{ opsi__register_products_copy.results|d([]) }}'
+
+# .. ]]]
+
+# OPSI product installation files [[[
+
+- name: Create directory where the archive files should be stored
+  file:
+    path: '{{ opsi__installfiles_archive_dir_path }}'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0750'
+  tags: [ 'role::opsi:installfiles' ]
+
+- name: Re-read local facts
+  action: setup
+  tags: [ 'role::opsi:installfiles' ]
+
+- name: Extract the installfiles for each given OPSI product
+  include: copy_installfiles.yml
+  loop_control:
+    loop_var: 'opsi__installfiles_item'
+  # Sorry for that … But I did not find a way to save the `opsi__installfiles_both_sides_present_checksum_algos` using set_fact for each item.
+  # Now I need to evaluate that four times.
+  when: not (ansible_local|d() and ansible_local.opsi_ypid|d() and
+             ansible_local.opsi_ypid.installfiles|d() and
+             ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key]|d() and
+             (ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key].setup_complete|d() | bool) and (
+               ( (opsi__installfiles_achrive_hash_algo_preference
+                   | intersect(opsi__installfiles_item.value.archive_checksum.keys())
+                   | intersect(ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key].archive_checksum.keys()) | length) > 0 and
+                 (ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key].archive_checksum[(opsi__installfiles_achrive_hash_algo_preference
+                   | intersect(opsi__installfiles_item.value.archive_checksum.keys())
+                   | intersect(ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key].archive_checksum.keys()) | first)]
+                   == opsi__installfiles_item.value.archive_checksum[(opsi__installfiles_achrive_hash_algo_preference
+                   | intersect(opsi__installfiles_item.value.archive_checksum.keys())
+                   | intersect(ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key].archive_checksum.keys()) | first)])
+               ) or (
+                 ( (opsi__installfiles_achrive_hash_algo_preference
+                   | intersect(opsi__installfiles_item.value.archive_checksum.keys())
+                   | intersect(ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key].archive_checksum.keys()) | length) == 0) and
+                 (ansible_local.opsi_ypid.installfiles[opsi__installfiles_item.key].archive_local_file_path|basename
+                   == opsi__installfiles_item.value.controller_archive_file_path|basename)
+               )
+             )
+           )
+  with_dict: '{{ opsi__installfiles_combined|d({}) }}'
+  ## Can be undefined because Ansible 2 will evaluate the tasks in the included
+  ## file even when `role::opsi:installfiles` is skipped.
+  tags: [ 'role::opsi:installfiles' ]
+
+# .. ]]]
+
+# Save state using Ansible facts [[[
+
+- name: Re-read local facts
+  action: setup
+
+- name: Save local Ansible facts
+  template:
+    src: 'etc/ansible/facts.d/opsi_ypid.fact.j2'
+    dest: '/etc/ansible/facts.d/opsi_ypid.fact'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  tags: [ 'test' ]
+
+# .. ]]]
