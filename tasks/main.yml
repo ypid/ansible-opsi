@@ -22,7 +22,7 @@
     install_recommends: False
     purge: True
   with_flattened: '{{ opsi__base_packages }}'
-  tags: [ 'role::opsi:pkg_install' ]
+  tags: [ 'role::opsi:pkgs' ]
 
 - name: Check if Opsi is installed on the system
   command: which opsi-product-updater

@@ -28,6 +28,8 @@ Here's an example playbook that can be used to setup and manage X2go server:
 
 This playbooks is shipped with this role under :file:`docs/playbooks/opsi.yml`
 from which you can symlink it to your playbook directory.
+In case you use multiple roles maintained by ypid_, consider
+using the `ypid-ansible-common`_.
 
 Ansible tags
 ------------
@@ -43,7 +45,7 @@ Available role tags:
   Main role tag, should be used in the playbook to execute all of the role
   tasks as well as role dependencies.
 
-``role::opsi:pkg_install``
+``role::opsi:pkgs``
   Tasks related to the installation of additional system packages.
 
 ``role::opsi:prod_update``
