@@ -1,4 +1,4 @@
-Experiences with different computer modles
+Experiences with different computer models
 ==========================================
 
 .. contents::
@@ -14,7 +14,7 @@ System firmware setup
 TODO
 ~~~~
 
-* Is it possible to import system firmware settings using the GUI software thingy that the OEM provides?
+* Is it possible to import system firmware settings using the GUI software thingy that the OEMs provide?
 
 
 Options for changing certin settings
@@ -41,7 +41,7 @@ I/O MMU virtualization
 """"""""""""""""""""""
 
 Fujitsu seems to disable this by default. Reason is unclear to me and it might
-come in handy when deploying desktop virtualization. This I decided to enable
+come in handy when deploying desktop virtualization. So I decided to enable
 it.
 
 
