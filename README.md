@@ -199,7 +199,7 @@ opsi__installfiles_host: {}
 # List of hash algorithms, in order of preference starting with the
 # preferred one.
 # The first hash algorithm will be used when it was specified using
-# :any:`archive_checksum <opsi__ref_archive_checksum>`.
+# :envvar:`archive_checksum <opsi__ref_archive_checksum>`.
 #
 # Currently, only ``sha1`` is supported but the role default
 # will use the strongest hash function available in the Ansible ``copy``
@@ -235,21 +235,21 @@ opsi__products_files_dir_path: '/home/fixme/ansible_managed'
 
 # .. envvar:: opsi__products_files_owner
 #
-# System user who owns the :any:`opsi__products_files_dir_path` and all files
+# System user who owns the :envvar:`opsi__products_files_dir_path` and all files
 # and directories below it.
 opsi__products_files_owner: 'root'
 
 
 # .. envvar:: opsi__products_files_group
 #
-# System group of the :any:`opsi__products_files_dir_path` and all files
+# System group of the :envvar:`opsi__products_files_dir_path` and all files
 # and directories below it.
 opsi__products_files_group: 'root'
 
 
 # .. envvar:: opsi__products_files_permissions
 #
-# Unix permissions of the :any:`opsi__products_files_dir_path` and all files
+# Unix permissions of the :envvar:`opsi__products_files_dir_path` and all files
 # and directories below it. Refer to :manpage:`chmod(1)` for details.
 opsi__products_files_permissions: 'u=rwX,g=rwX,o=rX'
 

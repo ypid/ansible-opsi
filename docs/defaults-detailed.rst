@@ -61,5 +61,5 @@ OPSI product installation files
     archive_checksum:
       sha1: 'da39a3ee5e6b4b0d3255bfef95601890afd80709'
 
-  Refer to :any:`opsi__installfiles_achrive_hash_algo_preference` for more
+  Refer to :envvar:`opsi__installfiles_achrive_hash_algo_preference` for more
   details.

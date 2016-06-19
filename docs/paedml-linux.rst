@@ -32,7 +32,7 @@ set of additional products which would not be installed otherwise.
    -i Install all downloadable packages from configured repositories (ignores excludes).
 
 If you want to influence this behavior, checkout the
-:any:`opsi__product_updater_options` variable.
+:envvar:`opsi__product_updater_options` variable.
 
 As of 2016-06-01, ``-i`` causes the following products to be installed additionally:
 
