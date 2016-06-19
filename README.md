@@ -4,6 +4,7 @@
      instead have a look at the files in the ./meta/ directory. -->
 
 [![Travis CI](http://img.shields.io/travis/ypid/ansible-opsi.svg?style=flat)](http://travis-ci.org/ypid/ansible-opsi)
+[![Ansible Galaxy](http://img.shields.io/badge/galaxy-ypid.opsi-660198.svg?style=flat)](https://galaxy.ansible.com/ypid/opsi)
 [![Platforms](http://img.shields.io/badge/platforms-ubuntu%20/%20univention-lightgrey.svg?style=flat)](#)
 [![GitHub Tags](https://img.shields.io/github/tag/ypid/ansible-opsi.svg)](https://github.com/ypid/ansible-opsi)
 [![GitHub Stars](https://img.shields.io/github/stars/ypid/ansible-opsi.svg)](https://github.com/ypid/ansible-opsi)
@@ -18,14 +19,30 @@ in a production environment.
 
 Manage Opsi using Ansible :)
 
-The ypid.opsi role is meant for managing the software distribution and
-management system [Opsi](https://en.wikipedia.org/wiki/Opsi) (open PC
-server integration). [Opsi](https://en.wikipedia.org/wiki/Opsi) primarily
-targeting [Microsoft
-Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) clients but can
-also install and manage
-[GNU](https://en.wikipedia.org/wiki/GNU_Project)/[Linux](https://en.wikipedia.org/wiki/Linux)
-hosts.
+The `ypid.opsi` role is meant for managing the software distribution and
+management system [Opsi][] (open PC server integration). [Opsi][] primarily
+targeting [Microsoft Windows][] clients but can also install and manage
+[GNU][]/[Linux][] hosts.
+
+[Opsi]: https://en.wikipedia.org/wiki/Opsi
+[Microsoft Windows]: https://en.wikipedia.org/wiki/Microsoft_Windows
+[GNU]: https://en.wikipedia.org/wiki/GNU_Project
+[Linux]: https://en.wikipedia.org/wiki/Linux
+
+### Installation
+
+This role requires at least Ansible `v2.1.0`. To install it, run:
+
+```Shell
+ansible-galaxy install ypid.opsi
+```
+
+To install via git, run either:
+
+```Shell
+git clone https://github.com/ypid/ansible-opsi.git ypid.opsi
+git submodule add https://github.com/ypid/ansible-opsi.git ypid.opsi
+```
 
 
 

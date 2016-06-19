@@ -1,9 +1,9 @@
 ---
 
 ansigenome_info:
+  galaxy_url: 'https://galaxy.ansible.com/ypid/opsi'
   github_url: 'https://github.com/ypid/ansible-opsi'
   git_branch: 'master'
-  galaxy_id: ''
 
   status:
     name: 'beta'
@@ -20,11 +20,12 @@ ansigenome_info:
       github: 'ypid'
 
   synopsis: |
-    The ypid.opsi role is meant for managing the software distribution and
-    management system [Opsi](https://en.wikipedia.org/wiki/Opsi) (open PC
-    server integration). [Opsi](https://en.wikipedia.org/wiki/Opsi) primarily
-    targeting [Microsoft
-    Windows](https://en.wikipedia.org/wiki/Microsoft_Windows) clients but can
-    also install and manage
-    [GNU](https://en.wikipedia.org/wiki/GNU_Project)/[Linux](https://en.wikipedia.org/wiki/Linux)
-    hosts.
+    The `ypid.opsi` role is meant for managing the software distribution and
+    management system [Opsi][] (open PC server integration). [Opsi][] primarily
+    targeting [Microsoft Windows][] clients but can also install and manage
+    [GNU][]/[Linux][] hosts.
+
+    [Opsi]: https://en.wikipedia.org/wiki/Opsi
+    [Microsoft Windows]: https://en.wikipedia.org/wiki/Microsoft_Windows
+    [GNU]: https://en.wikipedia.org/wiki/GNU_Project
+    [Linux]: https://en.wikipedia.org/wiki/Linux

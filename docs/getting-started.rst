@@ -46,7 +46,8 @@ Available role tags:
   tasks as well as role dependencies.
 
 ``role::opsi:pkgs``
-  Tasks related to the installation of additional system packages.
+  Tasks related to system package management like installing, upgrading or
+  removing packages.
 
 ``role::opsi:prod_update``
   Tasks related to OPSI product updating.
