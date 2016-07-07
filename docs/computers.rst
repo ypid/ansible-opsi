@@ -5,8 +5,9 @@ Experiences with different computer models
    :local:
    :depth: 1
 
-In this section I document my experiences with various computer models I worked
-with and how to best configure them for a school environment.
+In this section the author documents his experiences with various computer
+models he has worked with and how to best configure them for a school
+environment.
 
 System firmware setup
 ---------------------
@@ -17,7 +18,7 @@ TODO
 * Is it possible to import system firmware settings using the GUI software thingy that the OEMs provide?
 
 
-Options for changing certin settings
+Reasons for changing certin settings
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -34,15 +35,16 @@ Build-in microfone
 """"""""""""""""""
 
 Most system firmware settings don’t give you control over disabling the build
-in microphone independently from the other audio subsystem.
+in microphone independently from the audio subsystem.
+Without hardware modifications, there seems to be no easy fix for that.
 
 
 I/O MMU virtualization
 """"""""""""""""""""""
 
-Fujitsu seems to disable this by default. Reason is unclear to me and it might
-come in handy when deploying desktop virtualization. So I decided to enable
-it.
+Fujitsu seems to disable this by default. Reason is unclear to the author and
+it might come in handy when deploying desktop virtualization. So it was decided to
+enable it.
 
 
 Fujitsu
