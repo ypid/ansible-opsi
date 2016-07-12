@@ -105,7 +105,7 @@
   tags: [ 'role::opsi:installfiles' ]
 
 - name: Extract the installfiles for each given OPSI product
-  include: copy_installfiles.yml
+  include: 'copy_installfiles.yml'
   loop_control:
     loop_var: 'opsi__installfiles_item'
   # Sorry for that … But I did not find a way to save the `opsi__installfiles_both_sides_present_checksum_algos` using set_fact for each item.
