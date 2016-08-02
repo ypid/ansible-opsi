@@ -1,10 +1,20 @@
 Changelog
 =========
 
+.. include:: includes/all.rst
 
-v0.1.0
-------
+**ypid.opsi**
 
-*Unreleased*
+This project adheres to `Semantic Versioning <http://semver.org/spec/v2.0.0.html>`__
+and `human-readable changelog <http://keepachangelog.com/>`_.
 
-- Initial release. [ypid]
+The current role maintainer_ is ypid_.
+
+
+ypid.opsi v0.1.0 - unreleased
+-----------------------------
+
+Added
+~~~~~
+
+- Initial coding and design. [ypid_]
