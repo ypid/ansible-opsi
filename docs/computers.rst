@@ -36,7 +36,12 @@ Build-in microfone
 
 Most system firmware settings don’t give you control over disabling the build
 in microphone independently from the audio subsystem.
-Without hardware modifications, there seems to be no easy fix for that.
+
+System firmware for which this has been verified to work:
+
+* HP ProBook 6560b
+
+Without hardware modifications, there seems to be no easy and reliable fix for that.
 
 
 I/O MMU virtualization
