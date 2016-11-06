@@ -3,7 +3,7 @@ Experiences with different computer models
 
 .. contents::
    :local:
-   :depth: 1
+   :depth: 3
 
 In this section the author documents his experiences with various computer
 models he has worked with and how to best configure them for a school
@@ -18,8 +18,8 @@ TODO
 * Is it possible to import system firmware settings using the GUI software thingy that the OEMs provide?
 
 
-Reasons for changing certin settings
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reasons for changing certain settings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Build-in cameras
@@ -31,8 +31,8 @@ be actually useful to be very limited. Thus cameras are disabled in the
 system firmware settings. Additionally, consider convening the cameras
 with electrical tape just to be sure.
 
-Build-in microfone
-""""""""""""""""""
+Build-in microphone
+"""""""""""""""""""
 
 Most system firmware settings don’t give you control over disabling the build
 in microphone independently from the audio subsystem.
@@ -48,7 +48,8 @@ I/O MMU virtualization
 """"""""""""""""""""""
 
 Fujitsu seems to disable this by default. Reason is unclear to the author and
-it might come in handy when deploying desktop virtualization. So it was decided to
+it might come in handy when deploying desktop virtualization and as security
+feature (currently unused by common proprietary OSes). So it was decided to
 enable it.
 
 
@@ -94,7 +95,7 @@ Infos
   problem also occurs with other models with the same version of
   ``opsi-linux-bootimage``. Needs testing.
 * Can be ordered without build in camera :)
-* WOL does not seem to work. Even in AC mode. NIC link is shut down in S5. Only works right after leaving the firmware setup with save and power off
+* WOL does not seem to work. Even in AC mode. NIC link is shut down in S5. Only works right after leaving the firmware setup with save and power off.
   Might be related: http://support.fujitsupc.com/CS/Portal/supportsearch.do?srch=FAQ&Series=E%20Series&Model=E556&ProductType=Notebook%20PC#wakeonlan
 
 System firmware setup
@@ -116,7 +117,7 @@ Fujitsu Stylistic R726
 Infos
 """""
 
-* WOL does seem to work although NIC link is up in S5.
+* WOL does not seem to work although NIC link is up in S5.
 
 System firmware setup
 """""""""""""""""""""

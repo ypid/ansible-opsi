@@ -9,15 +9,15 @@ paedML Linux 6.0
 
 The main documentation on which this role builds on is:
 
-* `Installationsanleitung-20160419.pdf`_ (language: German)
+* Installationsanleitung-20160419.pdf_ (language: German)
 
-See `LMZ homepage for more documentation <https://www.lmz-bw.de/technische-unterstuetzung/kundenportal/linux/dokumentationen.html>`_ (language: German).
+Refer to the `LMZ homepage <https://www.lmz-bw.de/technische-unterstuetzung/kundenportal/linux/dokumentationen.html>`_ for more documentation (language: German).
 
-So if you are following this documentation more then once then you found the
+If you are following this documentation more then once then you found the
 right tool in this role because it can help you out in automating the
 repetitive parts of this documentation away.
 
-Refer to the `ypid.paedml_linux`_ which is the base Ansible role for setting up
+Refer to ypid.paedml_linux_ which is the base Ansible role for setting up
 `paedML Linux`_. The role also contains additional documentation regarding
 `paedML Linux`_.
 
@@ -28,6 +28,8 @@ Opsi product updates
 
 By default, product updates will be done using the ``-i`` option to install a
 set of additional products which would not be installed otherwise.
+
+::
 
    -i Install all downloadable packages from configured repositories (ignores excludes).
 
