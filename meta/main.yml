@@ -7,7 +7,7 @@ galaxy_info:
   author: 'Robin Schneider'
   description: 'Manage Opsi using Ansible :)'
   license: 'AGPL-3.0'
-  min_ansible_version: '2.1.0'
+  min_ansible_version: '2.1.3'
 
   status:
     name: 'beta'
