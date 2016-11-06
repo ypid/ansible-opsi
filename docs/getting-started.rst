@@ -21,7 +21,7 @@ Add the hosts on which Opsi should be manage to the
 Example playbook
 ----------------
 
-Here's an example playbook that can be used to setup and manage X2go server:
+Here's an example playbook that uses the ``ypid.opsi`` role:
 
 .. literalinclude:: playbooks/opsi.yml
    :language: yaml
