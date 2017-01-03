@@ -5,7 +5,7 @@ Introduction
 
 
 The ``ypid.opsi`` role is meant for managing the software distribution and
-management system Opsi_ (open PC server integration). Opsi_ primarily targeting
+management system Opsi_ (open PC server integration). Opsi_ primarily targets
 `Microsoft Windows`_ clients but can also install and manage GNU_/Linux_ hosts.
 
 While this role is designed to be flexible enough to be used with a variety of

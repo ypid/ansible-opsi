@@ -22,7 +22,7 @@ Manage Opsi using Ansible :)
 
 The `ypid.opsi` role is meant for managing the software distribution and
 management system [Opsi][] (open PC server integration). [Opsi][] primarily
-targeting [Microsoft Windows][] clients but can also install and manage
+targets [Microsoft Windows][] clients but can also install and manage
 [GNU][]/[Linux][] hosts.
 
 [Opsi]: https://en.wikipedia.org/wiki/Opsi
