@@ -84,7 +84,7 @@
 
 - name: Install Opsi products
   command: opsi-package-manager --install {{ item.dest | quote }}
-  when: (item|changed and item.value.state|d("present") in [ "present" ])
+  when: (item is changed and item.value.state|d("present") in [ "present" ])
   with_items: '{{ opsi__register_products_copy.results|d([]) }}'
 
 # .. ]]]
